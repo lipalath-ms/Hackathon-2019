@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+  {% block content %}
+ 
+  <div align = "center"> <h3 style = "color: black;"> Visualize CSV </div>
+  <br/>
+      
+  <body>  
+
+  <form action="get-labels" method="post" enctype="multipart/form-data">
+  <div align = "center">
+  <table>
+  <tr>
+    <td> Upload a CSV file </td> <td>&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+    <td><input name="csv-file" type="file" value='' id="csv-file"></input></ td>
+    <td> <div align = center> <button> Submit </button> </div> </td>
+  </tr>
+  </table>
+  </form>
+  </div>
+
+  <br/> <br/>
+
+  <form action="select-labels" method="post" enctype="multipart/form-data">
+  <table>
+  <tr>
+    <td> {{msg}} </td> 
+  </tr>
+  <tr>
+    <td>
+    {% for label in labels %}
+       <div align = "justify"> <input type="checkbox" name="check" value={{label}} onclick="hideMe()"> {{label}} </div>
+    {% endfor %} 
+    </td> 
+    <td> <div align = center> <button> Select </button> </div> </td>
+  </tr>
+  </table>
+  
+  <input type="hidden" name="file-name" value={{csvFileName}}> 
+  </form>
+  </div>
+
+  </body>
+
+  <script>
+  function hideMe()
+  {
+  $("#msg").hide()
+  }
+  </script>
+
+  <br/> <br/> 
+
+<div id = "msg" align = "center"><h3> <p class="text-danger"> {{inputErrorMessage}} {{typeErrorMessage}} {{lessLabelError}} {{moreLabelError}} {{noFirstLabelError}} </p> </h3> </div>
+{% endblock %}   
+ 

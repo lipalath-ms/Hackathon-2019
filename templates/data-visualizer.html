@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+  {% block content %}
+
+  <head>
+  <meta charset="UTF-8">
+  <title>Example of Bootstrap 3 List Group Contextual Classes</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <style type="text/css">
+  .bs-example
+  {
+    margin: 100px;
+  }
+  </style>
+  </head>
+
+  <body>
+  <div class="bs-example">
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-success"> <div align = "center"> <a href = '/visualize-csv'> CSV File </a> </div> </li>
+       <!-- <li class="list-group-item list-group-item-info"> <div align = "center"> <a href = '/data'> Data File </a> </div> </li>
+        <li class="list-group-item list-group-item-warning"> <div align = "center"> <a href = '/parameter'> Parameter File </a> </div> </li>
+        <li class="list-group-item list-group-item-danger"> <div align = "center"> <a href = '/animation'> Animation File </a> </div> </li>
+	 <li class="list-group-item list-group-item-success"> <div align = "center"> <a href = '/statvar'> Statistics Variable File </a> </div> </li>-->
+    </ul>
+  </div>
+  </body>
+  
+  {% endblock %}    

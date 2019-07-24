@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+  {% block content %}
+
+ 
+ 
+  <br/>
+  <div align = "center"> <h3 style = "color: black;"> CSV to TSV Converter </div>
+  <br/>
+  <body>      
+       
+  <form action="upload-csv-for-tsv" method="post" enctype="multipart/form-data">
+  <div align = "center">
+  
+  <table>
+  <tr>
+  <td> Upload File </td> <td>&nbsp;&nbsp;&nbsp;&nbsp;</td> <td><input name = "input-file" type = "file" value = '' id = "input-file" required></input></td>
+  </tr>
+  
+  </table> 
+  <br> <br>
+
+  <div align = center><INPUT Type="submit" VALUE="Convert"> </div>
+  </div>
+  </form>
+  </body>
+    
+  <br> <br>
+
+  </div>
+  </div>
+ 
+<div id = "msg1" align = "center"> <h3> <p class="text-danger"> {{typeErrorMessage}} </p> </h3> </div>
+<div id = "msg2" align = "center"> <h3> <p class="text-success"> {{successMessage}} </p> </h3> </div>
+
+{% endblock %}    
+ 

@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+  {% block content %}
+
+<meta charset="utf-8">
+<style>
+
+.bar {
+  fill: #006400;
+}
+
+.bar:hover {
+  fill: #32CD32;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+</style>
+
+  <div align = "center"> <h3 style = "color: black;"> Visualize CSV </div>
+  <br/>
+  <body>  
+
+  <form action="get-labels" method="post" enctype="multipart/form-data">
+  <div align = "center">
+  <table>
+  <tr>
+    <td> Upload a CSV file </td> <td>&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+    <td><input name="csv-file" type="file" value='' id="csv-file"></input></ td>
+    <td> <div align = center> <button> Submit </button> </div> </td>
+  </tr>
+  </table>
+  </form>
+  </div>
+
+  <br/> <br/>
+
+  <form action="select-labels" method="post" enctype="multipart/form-data">
+  <div align = "center">
+  <table>
+  <tr>
+    <td> {{msg}} </td> 
+  </tr>
+  <tr>
+    <td>
+    {% for label in labels %}
+      <div align = "justify"> <input type="checkbox" name="check" value={{label}} onclick="hideMe()"> {{label}} </div>
+    {% endfor %} 
+    </td> 
+    <td> <div align = center> <button> Select </button> </div> </td>
+  </tr>
+  </table>
+  <input type="hidden" name="file-name" value={{csvFileName}}> 
+  </form>
+  </div>  
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script>
+
+var margin = {top: 20, right: 20, bottom: 30, left: 100},
+    width = 1500 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(10);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.tsv('{{'/tsv/get/'+filename}}', type, function(error, data) {
+  if (error) throw error;
+
+  x.domain(data.map(function(d) { return d.{{xLabel}}; }));
+  y.domain([0, d3.max(data, function(d) { return d.{{yLabel}}; })]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+     .append("text")
+      .text("{{xLabel}}");	
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "15px")
+      .style("text-anchor", "end")
+      .text("{{yLabel}}");
+
+  svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.{{xLabel}}); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.{{yLabel}}); })
+      .attr("height", function(d) { return height - y(d.{{yLabel}}); });
+});
+
+function type(d) {
+  d.{{yLabel}} = +d.{{yLabel}};
+  return d;
+}
+
+</script>
+
+  <script>
+  function hideMe()
+  {
+  $("#msg").hide()
+  }
+  </script>
+
+  <br/> <br/> 
+
+<div id = "msg" align = "center"><h3> <p class="text-danger"> {{inputErrorMessage}} {{typeErrorMessage}} {{lessLabelError}} {{moreLabelError}} {{noFirstLabelError}} </p> </h3> </div>
+{% endblock %}   
+
+

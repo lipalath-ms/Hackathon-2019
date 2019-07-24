@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+  {% block content %}
+  
+  <div align = "center"> <h3 style = "color: black;"> Visualize CSV </div>
+  <hr/>
+      
+  <body>  
+ 
+  <form action="get-labels" method="post" enctype="multipart/form-data">
+  <div align = "center">
+  <table>
+  <tr>
+    <td> Upload a CSV file </td> <td>&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+    <td><input name="csv-file" type="file" value='' id="csv-file"></input></ td>
+    <td> <div align = center><INPUT Type="submit" name = "submit" VALUE="Submit"></div> </td>
+  </tr>
+  
+  </table> 
+  
+  <br> <br>
+  </div>
+  
+  <br><br>
+ </body>
+
+<div align = "center"> {{inputErrorMessage}} </div>
+<div align = "center"> {{typeErrorMessage}} </div>
+
+{% endblock %}   
+ 
