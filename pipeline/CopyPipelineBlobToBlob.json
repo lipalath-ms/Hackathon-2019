@@ -1,5 +1,5 @@
 {
-	"name": "CopyPipeline",
+	"name": "CopyPipelineBlobToBlob",
 	"properties": {
 		"activities": [
 			{
