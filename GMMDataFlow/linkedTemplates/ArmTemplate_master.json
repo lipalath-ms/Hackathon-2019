@@ -7,13 +7,17 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "GMMDataFlow"
 		},
+		"AzureStorageLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureStorageLinkedService'"
+		},
 		"ConsumerSQL_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ConsumerSQL'"
 		},
-		"AzureStorageLinkedService_connectionString": {
+		"AzureSqlDatabaseLinkedService_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureStorageLinkedService'"
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseLinkedService'"
 		},
 		"containerUri": {
 			"type": "string",
@@ -42,11 +46,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureStorageLinkedService_connectionString": {
+						"value": "[parameters('AzureStorageLinkedService_connectionString')]"
+					},
 					"ConsumerSQL_connectionString": {
 						"value": "[parameters('ConsumerSQL_connectionString')]"
 					},
-					"AzureStorageLinkedService_connectionString": {
-						"value": "[parameters('AzureStorageLinkedService_connectionString')]"
+					"AzureSqlDatabaseLinkedService_connectionString": {
+						"value": "[parameters('AzureSqlDatabaseLinkedService_connectionString')]"
 					}
 				}
 			},

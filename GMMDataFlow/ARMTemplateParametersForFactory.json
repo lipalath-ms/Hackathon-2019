@@ -5,10 +5,13 @@
 		"factoryName": {
 			"value": "GMMDataFlow"
 		},
+		"AzureStorageLinkedService_connectionString": {
+			"value": ""
+		},
 		"ConsumerSQL_connectionString": {
 			"value": ""
 		},
-		"AzureStorageLinkedService_connectionString": {
+		"AzureSqlDatabaseLinkedService_connectionString": {
 			"value": ""
 		}
 	}
