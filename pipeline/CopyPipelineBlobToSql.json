@@ -1,0 +1,6 @@
+{
+	"name": "CopyPipelineBlobToSql",
+	"properties": {
+		"annotations": []
+	}
+}
