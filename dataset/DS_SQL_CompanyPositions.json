@@ -1,0 +1,16 @@
+{
+	"name": "DS_SQL_CompanyPositions",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "test_sql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "CompanyPositions"
+		}
+	}
+}
