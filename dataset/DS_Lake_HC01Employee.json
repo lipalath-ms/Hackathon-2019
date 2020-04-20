@@ -1,0 +1,20 @@
+{
+	"name": "DS_Lake_HC01Employee",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "test_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "@concat('HC01/HC01Employee/Full/', dataset().HandShakeValue)",
+				"fileSystem": "publish"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
