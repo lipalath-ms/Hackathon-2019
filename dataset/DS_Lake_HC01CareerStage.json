@@ -1,5 +1,5 @@
 {
-	"name": "DS_Lake_HC01Employee",
+	"name": "DS_Lake_HC01CareerStage",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "test_storage",
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "@concat('HC01/HC01Employee/Full/', dataset().HandShakeValue)",
+				"folderPath": "@concat('HC01/HC01CareerStage/Full/', dataset().HandShakeValue)",
 				"fileSystem": "publish"
 			},
 			"compressionCodec": "snappy"

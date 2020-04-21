@@ -1,0 +1,48 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Lake_HC01PersonCareerStage",
+						"type": "DatasetReference"
+					},
+					"name": "HC01PersonCareerStage"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Lake_HC01CareerStage",
+						"type": "DatasetReference"
+					},
+					"name": "HC01CareerStage"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_CompanyPositions",
+						"type": "DatasetReference"
+					},
+					"name": "Output"
+				}
+			],
+			"transformations": [
+				{
+					"name": "HC01PersonCareerStageProjection"
+				},
+				{
+					"name": "HC01CareerStageProjection"
+				},
+				{
+					"name": "JoinedStream"
+				},
+				{
+					"name": "Metrics"
+				}
+			],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01PersonCareerStage\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01CareerStage\nHC01PersonCareerStage select(skipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01PersonCareerStageProjection\nHC01CareerStage select(skipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01CareerStageProjection\nHC01PersonCareerStageProjection, HC01CareerStageProjection join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinedStream\nJoinedStream aggregate() ~> Metrics\nMetrics sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Output"
+		}
+	}
+}
