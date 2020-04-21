@@ -58,6 +58,12 @@
 									"value": "@activity('LKP_FetchHandShakeValue').output.firstRow.LatestFolderName",
 									"type": "Expression"
 								}
+							},
+							"HC01CareerStage": {
+								"HandShakeValue": {
+									"value": "@activity('LKP_FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
 							}
 						}
 					},
