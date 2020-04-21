@@ -51,7 +51,15 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "dataflow1",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"HC01PersonCareerStage": {
+								"HandShakeValue": {
+									"value": "@activity('LKP_FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
