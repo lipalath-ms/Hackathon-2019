@@ -1,5 +1,5 @@
 {
-	"name": "DS_SQL_CompanyPositions",
+	"name": "DS_SQL_Test",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "test_sql",
@@ -9,8 +9,14 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "dbo",
-			"table": "CompanyPositions"
+			"schema": {
+				"value": "dbo",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "test",
+				"type": "Expression"
+			}
 		}
 	}
 }

@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DS_SQL_CompanyPositions",
+						"referenceName": "DS_SQL_Test",
 						"type": "DatasetReference"
 					},
 					"name": "Output"
