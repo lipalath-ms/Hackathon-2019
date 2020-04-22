@@ -1,0 +1,26 @@
+{
+	"name": "Handshake",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "test_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "HC01/Handshake",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "publish",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
