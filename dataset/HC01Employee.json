@@ -1,0 +1,31 @@
+{
+	"name": "HC01Employee",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "test_storage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"HandShakeValue": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat('HC01/HC01Employee/Full/', dataset().HandShakeValue)",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "publish",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
