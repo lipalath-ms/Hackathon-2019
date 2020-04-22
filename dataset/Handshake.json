@@ -5,6 +5,9 @@
 			"referenceName": "test_storage",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "required_datasets"
+		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
