@@ -1,0 +1,271 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name"
+		},
+		"test_storage": {
+			"type": "string"
+		},
+		"test_sql": {
+			"type": "string"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CallDataFlow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LKP_FetchHandShakeValue",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.parquet"
+								}
+							},
+							"dataset": {
+								"referenceName": "DS_Lake_Handshake",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "LKP_FetchHandShakeValue",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"HC01PersonCareerStage": {
+										"HandShakeValue": {
+											"value": "@activity('LKP_FetchHandShakeValue').output.firstRow.LatestFolderName",
+											"type": "Expression"
+										}
+									},
+									"HC01CareerStage": {
+										"HandShakeValue": {
+											"value": "@activity('LKP_FetchHandShakeValue').output.firstRow.LatestFolderName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_Lake_Handshake')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Lake_Handshake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('test_storage')]",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "HC01/Handshake",
+						"fileSystem": "publish"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_Lake_HC01PersonCareerStage",
+								"type": "DatasetReference"
+							},
+							"name": "HC01PersonCareerStage"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_Lake_HC01CareerStage",
+								"type": "DatasetReference"
+							},
+							"name": "HC01CareerStage"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_SQL_Test",
+								"type": "DatasetReference"
+							},
+							"name": "Output"
+						}
+					],
+					"transformations": [
+						{
+							"name": "HC01PersonCareerStageProjection"
+						},
+						{
+							"name": "HC01CareerStageProjection"
+						},
+						{
+							"name": "JoinedStream"
+						},
+						{
+							"name": "Metrics"
+						}
+					],
+					"script": "source(output(\n\t\tAssignmentTypeDesc as string,\n\t\tCareerStageNumber as integer,\n\t\tFromDate as timestamp,\n\t\tPersonnelNumber as integer,\n\t\tToDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01PersonCareerStage\nsource(output(\n\t\tActiveInd as string,\n\t\tCareerStageDesc as string,\n\t\tCareerStageName as string,\n\t\tCareerStageNumber as integer,\n\t\tFromDate as timestamp,\n\t\tToDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01CareerStage\nHC01PersonCareerStage select(mapColumn(\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01PersonCareerStageProjection\nHC01CareerStage select(mapColumn(\n\t\tCareerStageName,\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01CareerStageProjection\nHC01PersonCareerStageProjection, HC01CareerStageProjection join(HC01PersonCareerStageProjection@CareerStageNumber == HC01CareerStageProjection@CareerStageNumber,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinedStream\nJoinedStream aggregate(groupBy(CareerStageName),\n\tCount = countDistinct(HC01PersonCareerStageProjection@CareerStageNumber)) ~> Metrics\nMetrics sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tCareerStageName,\n\t\tCount\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Output"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_Lake_HC01PersonCareerStage')]",
+				"[concat(variables('factoryId'), '/datasets/DS_Lake_HC01CareerStage')]",
+				"[concat(variables('factoryId'), '/datasets/DS_SQL_Test')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Lake_HC01PersonCareerStage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('test_storage')]",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"HandShakeValue": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@concat('HC01/HC01PersonCareerStage/Full/', dataset().HandShakeValue)",
+							"type": "Expression"
+						},
+						"fileSystem": "publish"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Lake_HC01CareerStage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('test_storage')]",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"HandShakeValue": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@concat('HC01/HC01CareerStage/Full/', dataset().HandShakeValue)",
+							"type": "Expression"
+						},
+						"fileSystem": "publish"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SQL_Test')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('test_sql')]",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "dbo",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "test",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
