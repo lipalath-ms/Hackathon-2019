@@ -64,7 +64,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DS_SQL_Test",
+						"referenceName": "SqlDatabase",
 						"type": "DatasetReference"
 					},
 					"name": "Output"
