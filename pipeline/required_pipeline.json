@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "HandShake",
+				"name": "FetchHandShakeValue",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -34,7 +34,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "HandShake",
+						"activity": "FetchHandShakeValue",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -51,7 +51,57 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "required_data_flow",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"HC01CareerStage": {
+								"HandShakeValue": {
+									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
+							},
+							"HC01Employee": {
+								"HandShakeValue": {
+									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
+							},
+							"HC01EmployeePosition": {
+								"HandShakeValue": {
+									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
+							},
+							"HC01OrgBusiness": {
+								"HandShakeValue": {
+									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
+							},
+							"HC01Person": {
+								"HandShakeValue": {
+									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
+							},
+							"HC01PersonCareerStage": {
+								"HandShakeValue": {
+									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
+							},
+							"HC01ReportsToHierarchyTree": {
+								"HandShakeValue": {
+									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
+							},
+							"HCH01JobFunction": {
+								"HandShakeValue": {
+									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
+									"type": "Expression"
+								}
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
