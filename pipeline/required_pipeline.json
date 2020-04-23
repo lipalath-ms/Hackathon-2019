@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Handshake_Value",
+				"name": "HandShakeValue",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
