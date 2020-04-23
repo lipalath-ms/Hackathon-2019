@@ -55,7 +55,7 @@
 						"datasetParameters": {
 							"HC01CareerStage": {
 								"HandShakeValue": {
-									"value": "202004221200",
+									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
 									"type": "Expression"
 								}
 							},
