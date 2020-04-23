@@ -10,9 +10,6 @@
 				"type": "string"
 			}
 		},
-		"folder": {
-			"name": "required_datasets"
-		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
