@@ -45,6 +45,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "HC01PersonCareerStage"
+				},
+				{
+					"dataset": {
+						"referenceName": "HC01ReportsToHierarchyTree",
+						"type": "DatasetReference"
+					},
+					"name": "HC01ReportsToHierarchyTree"
+				},
+				{
+					"dataset": {
+						"referenceName": "HCH01JobFunction",
+						"type": "DatasetReference"
+					},
+					"name": "HCH01JobFunction"
 				}
 			],
 			"sinks": [
@@ -70,7 +84,7 @@
 					"name": "Metrics"
 				}
 			],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01CareerStage\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01Employee\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01EmployeePosition\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01OrgBusiness\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01Person\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01PersonCareerStage\nHC01CareerStage select(mapColumn(\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01PersonCareerStageProjection\nHC01Employee select(mapColumn(\n\t\tCareerStageName,\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01CareerStageProjection\nHC01PersonCareerStageProjection, HC01CareerStageProjection join(HC01PersonCareerStageProjection@CareerStageNumber == HC01CareerStageProjection@CareerStageNumber,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinedStream\nJoinedStream aggregate(groupBy(CareerStageName = CareerStageName),\n\tCount = countDistinct(HC01PersonCareerStageProjection@CareerStageNumber)) ~> Metrics\nMetrics sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tCareerStageName,\n\t\tCount\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Output"
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01CareerStage\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01Employee\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01EmployeePosition\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01OrgBusiness\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01Person\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01PersonCareerStage\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01ReportsToHierarchyTree\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HCH01JobFunction\nHC01CareerStage select(mapColumn(\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01PersonCareerStageProjection\nHC01Employee select(mapColumn(\n\t\tCareerStageName,\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01CareerStageProjection\nHC01PersonCareerStageProjection, HC01CareerStageProjection join(HC01PersonCareerStageProjection@CareerStageNumber == HC01CareerStageProjection@CareerStageNumber,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinedStream\nJoinedStream aggregate(groupBy(CareerStageName = CareerStageName),\n\tCount = countDistinct(HC01PersonCareerStageProjection@CareerStageNumber)) ~> Metrics\nMetrics sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tCareerStageName,\n\t\tCount\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Output"
 		}
 	}
 }
