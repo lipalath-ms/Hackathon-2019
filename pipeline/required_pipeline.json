@@ -13,7 +13,21 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.parquet"
+						}
+					},
+					"dataset": {
+						"referenceName": "Handshake",
+						"type": "DatasetReference"
+					}
+				}
 			},
 			{
 				"name": "Data Flow",
