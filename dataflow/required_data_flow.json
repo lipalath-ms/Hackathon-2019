@@ -6,17 +6,45 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DS_Lake_HC01PersonCareerStage",
-						"type": "DatasetReference"
-					},
-					"name": "HC01PersonCareerStage"
-				},
-				{
-					"dataset": {
-						"referenceName": "DS_Lake_HC01CareerStage",
+						"referenceName": "HC01CareerStage",
 						"type": "DatasetReference"
 					},
 					"name": "HC01CareerStage"
+				},
+				{
+					"dataset": {
+						"referenceName": "HC01Employee",
+						"type": "DatasetReference"
+					},
+					"name": "HC01Employee"
+				},
+				{
+					"dataset": {
+						"referenceName": "HC01EmployeePosition",
+						"type": "DatasetReference"
+					},
+					"name": "HC01EmployeePosition"
+				},
+				{
+					"dataset": {
+						"referenceName": "HC01OrgBusiness",
+						"type": "DatasetReference"
+					},
+					"name": "HC01OrgBusiness"
+				},
+				{
+					"dataset": {
+						"referenceName": "HC01Person",
+						"type": "DatasetReference"
+					},
+					"name": "HC01Person"
+				},
+				{
+					"dataset": {
+						"referenceName": "HC01PersonCareerStage",
+						"type": "DatasetReference"
+					},
+					"name": "HC01PersonCareerStage"
 				}
 			],
 			"sinks": [
@@ -42,7 +70,7 @@
 					"name": "Metrics"
 				}
 			],
-			"script": "source(output(\n\t\tAssignmentTypeDesc as string,\n\t\tCareerStageNumber as integer,\n\t\tFromDate as timestamp,\n\t\tPersonnelNumber as integer,\n\t\tToDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01PersonCareerStage\nsource(output(\n\t\tActiveInd as string,\n\t\tCareerStageDesc as string,\n\t\tCareerStageName as string,\n\t\tCareerStageNumber as integer,\n\t\tFromDate as timestamp,\n\t\tToDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01CareerStage\nHC01PersonCareerStage select(mapColumn(\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01PersonCareerStageProjection\nHC01CareerStage select(mapColumn(\n\t\tCareerStageName,\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01CareerStageProjection\nHC01PersonCareerStageProjection, HC01CareerStageProjection join(HC01PersonCareerStageProjection@CareerStageNumber == HC01CareerStageProjection@CareerStageNumber,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinedStream\nJoinedStream aggregate(groupBy(CareerStageName),\n\tCount = countDistinct(HC01PersonCareerStageProjection@CareerStageNumber)) ~> Metrics\nMetrics sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tCareerStageName,\n\t\tCount\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Output"
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01CareerStage\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01Employee\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01EmployeePosition\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01OrgBusiness\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01Person\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet') ~> HC01PersonCareerStage\nHC01CareerStage select(mapColumn(\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01PersonCareerStageProjection\nHC01Employee select(mapColumn(\n\t\tCareerStageName,\n\t\tCareerStageNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HC01CareerStageProjection\nHC01PersonCareerStageProjection, HC01CareerStageProjection join(HC01PersonCareerStageProjection@CareerStageNumber == HC01CareerStageProjection@CareerStageNumber,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinedStream\nJoinedStream aggregate(groupBy(CareerStageName = CareerStageName),\n\tCount = countDistinct(HC01PersonCareerStageProjection@CareerStageNumber)) ~> Metrics\nMetrics sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tCareerStageName,\n\t\tCount\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Output"
 		}
 	}
 }
