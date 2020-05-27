@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "gmm-data-lp-test"
+		},
+		"test_storage_servicePrincipalKey": {
+			"value": ""
+		},
+		"test_storage_properties_typeProperties_url": {
+			"value": "https://hcmlakeuat.dfs.core.windows.net/"
+		},
+		"test_storage_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"test_storage_properties_typeProperties_servicePrincipalId": {
+			"value": "0861e618-d3f0-4791-aa57-2c9e8525e0b1"
+		}
+	}
+}

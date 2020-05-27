@@ -1,0 +1,70 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "gmm-data-lp-test"
+		},
+		"test_storage_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'test_storage'"
+		},
+		"test_storage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://hcmlakeuat.dfs.core.windows.net/"
+		},
+		"test_storage_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"test_storage_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "0861e618-d3f0-4791-aa57-2c9e8525e0b1"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"test_storage_servicePrincipalKey": {
+						"value": "[parameters('test_storage_servicePrincipalKey')]"
+					},
+					"test_storage_properties_typeProperties_url": {
+						"value": "[parameters('test_storage_properties_typeProperties_url')]"
+					},
+					"test_storage_properties_typeProperties_tenant": {
+						"value": "[parameters('test_storage_properties_typeProperties_tenant')]"
+					},
+					"test_storage_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('test_storage_properties_typeProperties_servicePrincipalId')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
