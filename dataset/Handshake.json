@@ -1,10 +1,6 @@
 {
 	"name": "Handshake",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "test_storage",
-			"type": "LinkedServiceReference"
-		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
