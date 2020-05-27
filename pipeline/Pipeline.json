@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "Handshake",
+						"referenceName": "DelimitedText1",
 						"type": "DatasetReference"
 					},
 					"timeout": "7.00:00:00",
