@@ -113,8 +113,8 @@
 						}
 					},
 					{
-						"name": "Delete1",
-						"type": "Delete",
+						"name": "Validation1",
+						"type": "Validation",
 						"dependsOn": [
 							{
 								"activity": "FetchHandShakeValue",
@@ -123,13 +123,6 @@
 								]
 							}
 						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
@@ -137,25 +130,15 @@
 								"type": "DatasetReference",
 								"parameters": {}
 							},
-							"logStorageSettings": {
-								"linkedServiceName": {
-									"referenceName": "test_storage",
-									"type": "LinkedServiceReference"
-								}
-							},
-							"enableLogging": true,
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true
-							}
+							"timeout": "7.00:00:00",
+							"sleep": 10
 						}
 					}
 				],
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Handshake')]",
-				"[concat(variables('factoryId'), '/linkedServices/test_storage')]"
+				"[concat(variables('factoryId'), '/datasets/Handshake')]"
 			]
 		}
 	]
