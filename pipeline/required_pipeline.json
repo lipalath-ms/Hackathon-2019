@@ -51,7 +51,16 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "HCH01JobFunction",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"HandShakeValue": "test"
+						}
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureStorageLinkedService",
+							"type": "LinkedServiceReference"
+						}
 					},
 					"enableLogging": true,
 					"storeSettings": {
