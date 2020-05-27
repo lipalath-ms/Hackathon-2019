@@ -56,12 +56,6 @@
 							"HandShakeValue": "test"
 						}
 					},
-					"logStorageSettings": {
-						"linkedServiceName": {
-							"referenceName": "AzureStorageLinkedService",
-							"type": "LinkedServiceReference"
-						}
-					},
 					"enableLogging": true,
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
