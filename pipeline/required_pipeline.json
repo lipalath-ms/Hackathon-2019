@@ -30,8 +30,8 @@
 				}
 			},
 			{
-				"name": "Data Flow",
-				"type": "ExecuteDataFlow",
+				"name": "Delete1",
+				"type": "Delete",
 				"dependsOn": [
 					{
 						"activity": "FetchHandShakeValue",
@@ -49,63 +49,14 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "required_data_flow",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"HC01CareerStage": {
-								"HandShakeValue": {
-									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
-									"type": "Expression"
-								}
-							},
-							"HC01Employee": {
-								"HandShakeValue": {
-									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
-									"type": "Expression"
-								}
-							},
-							"HC01EmployeePosition": {
-								"HandShakeValue": {
-									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
-									"type": "Expression"
-								}
-							},
-							"HC01OrgBusiness": {
-								"HandShakeValue": {
-									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
-									"type": "Expression"
-								}
-							},
-							"HC01Person": {
-								"HandShakeValue": {
-									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
-									"type": "Expression"
-								}
-							},
-							"HC01PersonCareerStage": {
-								"HandShakeValue": {
-									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
-									"type": "Expression"
-								}
-							},
-							"HC01ReportsToHierarchyTree": {
-								"HandShakeValue": {
-									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
-									"type": "Expression"
-								}
-							},
-							"HCH01JobFunction": {
-								"HandShakeValue": {
-									"value": "@activity('FetchHandShakeValue').output.firstRow.LatestFolderName",
-									"type": "Expression"
-								}
-							}
-						}
+					"dataset": {
+						"referenceName": "HCH01JobFunction",
+						"type": "DatasetReference"
 					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true
 					}
 				}
 			}
