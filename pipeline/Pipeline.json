@@ -1,5 +1,5 @@
 {
-	"name": "required_pipeline",
+	"name": "Pipeline",
 	"properties": {
 		"activities": [
 			{
