@@ -50,10 +50,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "HCH01JobFunction",
-						"type": "DatasetReference",
-						"parameters": {
-							"HandShakeValue": "test"
+						"referenceName": "Handshake",
+						"type": "DatasetReference"
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "test_storage",
+							"type": "LinkedServiceReference"
 						}
 					},
 					"enableLogging": true,
